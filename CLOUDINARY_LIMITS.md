@@ -3,7 +3,7 @@
 ## 📊 Current Limits
 
 ### File Upload Limits
-- **Maximum file size**: 10MB per file
+- **Maximum file size**: 100MB per file
 - **Supported formats**: Images (JPG, PNG, GIF, WebP), Videos (MP4, AVI, MOV, WMV, FLV, WebM)
 
 ### Monthly Quotas
@@ -15,7 +15,7 @@
 
 ### Automatic Compression
 - Videos over **7MB** are automatically compressed
-- Target size: **8MB** (safe margin below 10MB limit)
+- Target size: **80MB** (safe margin below 100MB limit)
 - Compression settings:
   - Resolution: 854x480 (reduced from 1280x720)
   - FPS: 25 (reduced from 30)
@@ -40,7 +40,7 @@
 ## ⚠️ Common Issues & Solutions
 
 ### 1. File Too Large Error
-**Problem**: File exceeds 10MB limit
+**Problem**: File exceeds 100MB limit
 **Solution**: 
 - Use smaller files
 - Compress manually before upload

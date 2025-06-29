@@ -6,6 +6,8 @@ import VideoPlayer from '../components/VideoPlayer';
 import LessonList from '../components/LessonList';
 import { FaArrowLeft, FaDownload, FaBook, FaClock, FaUser, FaStar } from 'react-icons/fa';
 import './CourseDetailPage.css';
+import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const CourseDetailPage = () => {
   const { id } = useParams();
@@ -20,6 +22,13 @@ const CourseDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const { user, isAuthenticated, updateUser, loading: authLoading } = useAuth();
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [paymentRef, setPaymentRef] = useState('');
+  const [purchaseCode, setPurchaseCode] = useState('');
+  const [verifying, setVerifying] = useState(false);
+  const [purchaseError, setPurchaseError] = useState('');
+  const [accessAllowed, setAccessAllowed] = useState(false);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -56,9 +65,59 @@ const CourseDetailPage = () => {
     }
   }, [course, requiredLevel, requiredCategory, requiredSubCategory]);
 
+  // Fetch paymentRef on mount
+  useEffect(() => {
+    const fetchPaymentRef = async () => {
+      try {
+        const res = await api.get('/payment-settings');
+        setPaymentRef(res.data.paymentRef || '');
+      } catch (err) {
+        setPaymentRef('');
+      }
+    };
+    fetchPaymentRef();
+  }, []);
+
+  // Check if user has purchased the course
+  useEffect(() => {
+    if (!isAuthenticated || !user || !course) return;
+    if (user.purchasedCourses && user.purchasedCourses.includes(course._id)) {
+      setAccessAllowed(true);
+      setShowPurchaseModal(false);
+    } else {
+      setAccessAllowed(false);
+      setShowPurchaseModal(true);
+    }
+  }, [user, course, isAuthenticated]);
+
   const handleLessonSelect = (lesson) => {
     setSelectedLesson(lesson);
   }
+
+  const handleVerifyCode = async (e) => {
+    e.preventDefault();
+    setVerifying(true);
+    setPurchaseError('');
+    try {
+      const token = localStorage.getItem('token');
+      const res = await api.post('/purchase-codes/verify', { code: purchaseCode, courseId: course._id }, {
+        headers: { 'y-auth-token': token }
+      });
+      // Update user context (add course to purchasedCourses)
+      const updatedUser = { ...user, purchasedCourses: [...(user.purchasedCourses || []), course._id] };
+      updateUser(updatedUser);
+      setAccessAllowed(true);
+      setShowPurchaseModal(false);
+      setPurchaseCode('');
+      alert('تم تفعيل الكورس بنجاح! يمكنك الآن مشاهدة المحتوى.');
+    } catch (err) {
+      setPurchaseError(err.response?.data?.message || 'فشل التحقق من الكود. حاول مرة أخرى.');
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  if (authLoading) return <div>Loading...</div>;
 
   if (loading) {
     return (
@@ -111,6 +170,55 @@ const CourseDetailPage = () => {
 
   console.log('🔗 Video URL:', course.video);
 
+  if (!accessAllowed) {
+    return (
+      <div className="course-detail-locked">
+        {showPurchaseModal && (
+          <div className="modal-overlay" style={{zIndex:1000,background:'rgba(30,41,59,0.7)'}}>
+            <div className="purchase-modal-card" style={{maxWidth:'420px',margin:'5vh auto',borderRadius:'18px',boxShadow:'0 8px 32px rgba(0,0,0,0.18)',background:'#fff',padding:'2.2rem 2rem 2rem 2rem',position:'relative',display:'flex',flexDirection:'column',alignItems:'center'}}>
+              <div style={{display:'flex',flexDirection:'column',alignItems:'center',marginBottom:'1.2rem'}}>
+                <div style={{background:'#4299e1',color:'#fff',borderRadius:'50%',width:'60px',height:'60px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'2rem',boxShadow:'0 2px 8px rgba(66,153,225,0.12)'}}>
+                  <span role="img" aria-label="pay">💳</span>
+                </div>
+                <h3 style={{margin:'1rem 0 0.5rem 0',fontWeight:700,fontSize:'1.3rem',color:'#234e52'}}>شراء الكورس</h3>
+                <span style={{color:'#718096',fontSize:'1rem'}}>خطوات تفعيل الكورس بعد الدفع</span>
+              </div>
+              <div style={{width:'100%',marginBottom:'1.5rem'}}>
+                <div style={{display:'flex',alignItems:'center',gap:'0.7rem',marginBottom:'1.1rem'}}>
+                  <span style={{fontSize:'1.3rem',color:'#4299e1'}}>1</span>
+                  <span style={{fontWeight:600,color:'#234e52'}}>حوّل المبلغ على رقم الدفع:</span>
+                </div>
+                <div style={{fontWeight:'bold',fontSize:'1.2rem',background:'#f7fafc',padding:'0.7rem 1.2rem',borderRadius:'8px',margin:'0.2rem 0 0.7rem 0',letterSpacing:'1px',display:'inline-block',color:'#2b6cb0',border:'1px solid #e2e8f0',textAlign:'center'}}>{paymentRef || '—'}</div>
+                <div style={{display:'flex',alignItems:'center',gap:'0.7rem',marginBottom:'1.1rem'}}>
+                  <span style={{fontSize:'1.3rem',color:'#4299e1'}}>2</span>
+                  <span style={{fontWeight:600,color:'#234e52'}}>احتفظ بإيصال التحويل أو رقم العملية.</span>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:'0.7rem',marginBottom:'1.1rem'}}>
+                  <span style={{fontSize:'1.3rem',color:'#4299e1'}}>3</span>
+                  <span style={{fontWeight:600,color:'#234e52'}}>تواصل مع الإدارة للحصول على كود الشراء.</span>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:'0.7rem',marginBottom:'0.7rem'}}>
+                  <span style={{fontSize:'1.3rem',color:'#4299e1'}}>4</span>
+                  <span style={{fontWeight:600,color:'#234e52'}}>أدخل كود الشراء هنا لتفعيل الكورس:</span>
+                </div>
+              </div>
+              <form onSubmit={handleVerifyCode} style={{width:'100%',marginTop:'0.5rem',display:'flex',flexDirection:'column',alignItems:'center'}}>
+                <div style={{width:'100%',marginBottom:'0.7rem',display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                  <span style={{fontSize:'1.3rem',color:'#4299e1'}}><i className="fa fa-key" /></span>
+                  <input type="text" value={purchaseCode} onChange={e=>setPurchaseCode(e.target.value)} required placeholder="كود الشراء" style={{flex:1,padding:'0.7rem',borderRadius:'8px',border:'1px solid #cbd5e1',fontSize:'1.1rem',letterSpacing:'1px',background:'#f9fafb'}} />
+                </div>
+                <button type="submit" className="enroll-btn" disabled={verifying} style={{width:'100%',padding:'0.7rem',fontSize:'1.1rem',borderRadius:'8px',background:'#4299e1',color:'#fff',fontWeight:600,boxShadow:'0 2px 8px rgba(66,153,225,0.08)',marginBottom:'0.5rem'}}>{verifying ? 'جاري التحقق...' : 'تفعيل الكورس'}</button>
+                {purchaseError && <div style={{color:'#e53e3e',marginTop:'0.7rem',fontWeight:600,background:'#fff5f5',padding:'0.5rem',borderRadius:'8px',border:'1px solid #feb2b2',width:'100%',textAlign:'center'}}>{purchaseError}</div>}
+              </form>
+              <div style={{marginTop:'1.7rem',textAlign:'center',color:'#718096',fontSize:'0.97rem'}}>
+                <span style={{fontSize:'1.1rem'}}>💡</span> إذا واجهت أي مشكلة في الدفع أو التفعيل، تواصل مع الدعم.
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <motion.div 

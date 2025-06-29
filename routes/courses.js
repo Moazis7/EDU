@@ -264,7 +264,7 @@ router.post(
       // Handle specific Cloudinary errors
       if (err.message && err.message.includes('File too large')) {
         return res.status(400).json({ 
-          message: 'File too large for Cloudinary free plan. Maximum size is 10MB. Please compress your files or use smaller ones.',
+          message: 'File too large for Cloudinary free plan. Maximum size is 100MB. Please compress your files or use smaller ones.',
           error: err.message 
         });
       }
@@ -533,7 +533,7 @@ router.put(
       // Handle specific Cloudinary errors
       if (err.message && err.message.includes('File too large')) {
         return res.status(400).json({ 
-          message: 'File too large for Cloudinary free plan. Maximum size is 10MB. Please compress your files or use smaller ones.',
+          message: 'File too large for Cloudinary free plan. Maximum size is 100MB. Please compress your files or use smaller ones.',
           error: err.message 
         });
       }

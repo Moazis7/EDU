@@ -4,6 +4,7 @@ import './AdminPanel.css';
 import { FaUsers, FaBook, FaLayerGroup, FaDatabase, FaUserEdit, FaTrash, FaPlus, FaEye, FaDownload, FaVideo, FaFile, FaChartLine, FaCalendarAlt, FaStar, FaSave } from 'react-icons/fa';
 import { getAdminStats, getAllUsers, getCourses, getCategories, deleteUser, updateUser, deleteCourse, updateCourse, addCourse, addCategory, deleteCategory, updateCategory } from '../services/api';
 import VideoPlayer from '../components/VideoPlayer';
+import api from '../services/api';
 
 const AdminPanel = () => {
   const navigate = useNavigate();
@@ -536,7 +537,7 @@ const AdminPanel = () => {
       let errorMessage = err.response?.data?.message || err.message;
       
       if (errorMessage.includes('File too large') || errorMessage.includes('10MB')) {
-        errorMessage = `File too large for Cloudinary free plan. Maximum size is 10MB. Please compress your files or use smaller ones.\n\n💡 Tip: Videos over 7MB are automatically compressed, but some files may still be too large.`;
+        errorMessage = `File too large for Cloudinary free plan. Maximum size is 10MB. Please compress your files or use smaller ones.\n\n💡 Tip: Try compressing your image or using a smaller file.`;
       } else if (errorMessage.includes('bandwidth') || errorMessage.includes('quota')) {
         errorMessage = `Cloudinary bandwidth or storage quota exceeded. Please try again later or upgrade your plan.`;
       } else if (errorMessage.includes('compression')) {
@@ -788,6 +789,121 @@ const AdminPanel = () => {
     setSelectedFilterLevel('');
     setSelectedFilterCategory('');
     setCombinedFilter(false);
+  };
+
+  // Purchase Codes Management
+  const [purchaseCodes, setPurchaseCodes] = useState([]);
+  const [loadingCodes, setLoadingCodes] = useState(false);
+  const [errorCodes, setErrorCodes] = useState('');
+  const [showAddCodeModal, setShowAddCodeModal] = useState(false);
+  const [selectedCourseForCode, setSelectedCourseForCode] = useState('');
+  const [codeCount, setCodeCount] = useState(1);
+  const [creatingCode, setCreatingCode] = useState(false);
+  const [deletingCodeId, setDeletingCodeId] = useState(null);
+
+  // Payment Reference Management
+  const [paymentRef, setPaymentRef] = useState('');
+  const [newPaymentRef, setNewPaymentRef] = useState('');
+  const [editingPaymentRef, setEditingPaymentRef] = useState(false);
+  const [savingPaymentRef, setSavingPaymentRef] = useState(false);
+  const [paymentRefError, setPaymentRefError] = useState('');
+
+  // Fetch purchase codes
+  const fetchPurchaseCodes = async () => {
+    setLoadingCodes(true);
+    setErrorCodes('');
+    try {
+      const token = localStorage.getItem('token');
+      const res = await api.get('/purchase-codes', {
+        headers: { 'y-auth-token': token }
+      });
+      setPurchaseCodes(res.data);
+    } catch (err) {
+      setErrorCodes('Failed to fetch purchase codes');
+    } finally {
+      setLoadingCodes(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPurchaseCodes();
+  }, []);
+
+  const handleCreateCode = async (e) => {
+    e.preventDefault();
+    if (!selectedCourseForCode) return;
+    setCreatingCode(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.post('/purchase-codes/create', { courseId: selectedCourseForCode, count: codeCount }, {
+        headers: { 'y-auth-token': token }
+      });
+      setShowAddCodeModal(false);
+      setSelectedCourseForCode('');
+      setCodeCount(1);
+      fetchPurchaseCodes();
+      alert(`✅ ${response.data.message}`);
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || 'Failed to create codes';
+      alert(`❌ Error: ${errorMessage}`);
+    } finally {
+      setCreatingCode(false);
+    }
+  };
+
+  const handleDeleteCode = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this code?')) return;
+    setDeletingCodeId(id);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.delete(`/purchase-codes/${id}`, {
+        headers: { 'y-auth-token': token }
+      });
+      fetchPurchaseCodes();
+      alert(`✅ ${response.data.message}`);
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || 'Failed to delete code';
+      alert(`❌ Error: ${errorMessage}`);
+    } finally {
+      setDeletingCodeId(null);
+    }
+  };
+
+  // Fetch paymentRef from API on mount
+  useEffect(() => {
+    const fetchPaymentRef = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await api.get('/payment-settings', {
+          headers: { 'y-auth-token': token }
+        });
+        setPaymentRef(res.data?.paymentRef || '');
+        setNewPaymentRef(res.data?.paymentRef || '');
+      } catch (err) {
+        setPaymentRefError('Failed to fetch payment reference');
+      }
+    };
+    fetchPaymentRef();
+  }, []);
+
+  const handleSavePaymentRef = async (e) => {
+    e.preventDefault();
+    setSavingPaymentRef(true);
+    setPaymentRefError('');
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.post('/payment-settings', { paymentRef: newPaymentRef }, {
+        headers: { 'y-auth-token': token }
+      });
+      setPaymentRef(newPaymentRef);
+      setEditingPaymentRef(false);
+      alert(`✅ ${response.data.message}`);
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || 'Failed to save payment reference';
+      setPaymentRefError(errorMessage);
+    } finally {
+      setSavingPaymentRef(false);
+    }
   };
 
   if (loading) return (
@@ -2040,6 +2156,148 @@ const AdminPanel = () => {
           </div>
         </div>
       )}
+
+      {/* Purchase Codes Management Section */}
+      <div className="admin-section">
+        <h2 className="admin-section-title">
+          Purchase Codes
+          <button className="admin-action-btn add" onClick={() => setShowAddCodeModal(true)}>
+            <FaPlus />
+          </button>
+        </h2>
+        {loadingCodes ? (
+          <div>Loading codes...</div>
+        ) : errorCodes ? (
+          <div className="admin-error-container">{errorCodes}</div>
+        ) : (
+          <div className="admin-table-wrapper">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Course</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Used By</th>
+                  <th>Created</th>
+                  <th>Used At</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {purchaseCodes.length === 0 ? (
+                  <tr><td colSpan="8" style={{textAlign: 'center', padding: '2rem', color: '#666'}}>No purchase codes found. Create your first code!</td></tr>
+                ) : purchaseCodes.map(code => (
+                  <tr key={code._id}>
+                    <td>
+                      <strong style={{fontFamily: 'monospace', fontSize: '1.1rem', letterSpacing: '1px'}}>
+                        {code.code}
+                      </strong>
+                    </td>
+                    <td>{code.course ? code.course.title : 'N/A'}</td>
+                    <td>{code.course ? `$${code.course.price}` : 'N/A'}</td>
+                    <td>
+                      {code.used ? 
+                        <span style={{color:'#48bb78', fontWeight: 'bold'}}>✅ Used</span> : 
+                        <span style={{color:'#f56565', fontWeight: 'bold'}}>⏳ Unused</span>
+                      }
+                    </td>
+                    <td>
+                      {code.usedBy ? 
+                        <span style={{fontSize: '0.9rem'}}>
+                          {code.usedBy.name || code.usedBy.email || code.usedBy._id}
+                        </span> : 
+                        <span style={{color: '#999'}}>—</span>
+                      }
+                    </td>
+                    <td style={{fontSize: '0.9rem'}}>
+                      {code.createdAt ? new Date(code.createdAt).toLocaleDateString() : '—'}
+                    </td>
+                    <td style={{fontSize: '0.9rem'}}>
+                      {code.usedAt ? new Date(code.usedAt).toLocaleDateString() : '—'}
+                    </td>
+                    <td>
+                      <button 
+                        className="admin-action-btn delete" 
+                        onClick={() => handleDeleteCode(code._id)} 
+                        disabled={deletingCodeId===code._id}
+                        title="Delete Code"
+                      >
+                        {deletingCodeId===code._id ? '🗑️ Deleting...' : '🗑️'}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Add Code Modal */}
+        {showAddCodeModal && (
+          <div className="modal-overlay" onClick={() => setShowAddCodeModal(false)}>
+            <div className="modal" onClick={e => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>Create Purchase Code</h3>
+                <button className="modal-close" onClick={() => setShowAddCodeModal(false)}>×</button>
+              </div>
+              <form onSubmit={handleCreateCode} className="modal-form">
+                <div className="form-group">
+                  <label>Select Course *</label>
+                  <select value={selectedCourseForCode} onChange={e => setSelectedCourseForCode(e.target.value)} required>
+                    <option value="">-- Select Course --</option>
+                    {courses.map(course => (
+                      <option key={course._id} value={course._id}>{course.title} - ${course.price}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Number of Codes to Create *</label>
+                  <input 
+                    type="number" 
+                    value={codeCount} 
+                    onChange={e => setCodeCount(parseInt(e.target.value) || 1)} 
+                    min="1" 
+                    max="100"
+                    required 
+                    placeholder="Enter number of codes (1-100)" 
+                  />
+                  <small style={{color: '#666', fontSize: '0.9rem'}}>
+                    You can create up to 100 codes at once
+                  </small>
+                </div>
+                <div style={{display: 'flex', gap: '1rem', marginTop: '1rem'}}>
+                  <button type="submit" className="admin-action-btn add" disabled={creatingCode || !selectedCourseForCode}>
+                    {creatingCode ? 'Creating...' : `Create ${codeCount} Code${codeCount > 1 ? 's' : ''}`}
+                  </button>
+                  <button type="button" className="admin-action-btn cancel" onClick={() => setShowAddCodeModal(false)}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Payment Reference Section */}
+      <div className="admin-section">
+        <h2 className="admin-section-title">Payment Reference</h2>
+        {paymentRefError && <div className="admin-error-container">{paymentRefError}</div>}
+        {!editingPaymentRef ? (
+          <div style={{display:'flex',alignItems:'center',gap:'1rem'}}>
+            <span style={{fontWeight:'bold',fontSize:'1.2rem'}}>Current Payment Ref:</span>
+            <span style={{fontFamily:'monospace',fontSize:'1.2rem',background:'#f7fafc',padding:'0.5rem 1rem',borderRadius:'8px'}}>{paymentRef || 'Not set'}</span>
+            <button className="admin-action-btn edit" onClick={()=>setEditingPaymentRef(true)}><FaUserEdit /> Edit</button>
+          </div>
+        ) : (
+          <form onSubmit={handleSavePaymentRef} style={{display:'flex',alignItems:'center',gap:'1rem'}}>
+            <input type="text" value={newPaymentRef} onChange={e=>setNewPaymentRef(e.target.value)} required placeholder="Enter payment reference (e.g. Vodafone Cash number)" style={{fontSize:'1.1rem',padding:'0.5rem',borderRadius:'8px',border:'1px solid #ccc'}} />
+            <button type="submit" className="admin-action-btn save" disabled={savingPaymentRef}>{savingPaymentRef ? 'Saving...' : 'Save'}</button>
+            <button type="button" className="admin-action-btn cancel" onClick={()=>{setEditingPaymentRef(false);setNewPaymentRef(paymentRef);}}>Cancel</button>
+          </form>
+        )}
+      </div>
     </div>
   );
 };

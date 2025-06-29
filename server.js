@@ -116,8 +116,8 @@ app.use(
     },
   })
 );
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 
 if (app.get('env') === 'development') {
   app.use(morgan('tiny'));
@@ -135,6 +135,8 @@ const productUpload = require('./routes/courses.js');
 const cart = require('./routes/mycourses.js');
 const Category = require('./routes/categoryRoutes.js');
 const searchRoutes = require('./routes/searchRoutes.js');
+const purchaseCodesRoutes = require('./routes/purchaseCodes.js');
+const paymentSettingsRoutes = require('./routes/paymentSettings.js');
 
 console.log('✅ Routes loaded successfully');
 
@@ -144,6 +146,8 @@ app.use('/api/upload', productUpload);
 app.use('/api/cart', cart);
 app.use('/api/category', Category);
 app.use(searchRoutes);
+app.use('/api/purchase-codes', purchaseCodesRoutes);
+app.use('/api/payment-settings', paymentSettingsRoutes);
 
 console.log('✅ Routes mounted successfully');
 

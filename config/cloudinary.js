@@ -75,8 +75,14 @@ const videoStorage = new CompressedCloudinaryStorage({
     resource_type: 'video',
     allowed_formats: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm'],
     transformation: [
-      { fetch_format: 'mp4' }
-    ]
+      { fetch_format: 'mp4' },
+      { quality: 'auto:best' },
+      { width: 1920, height: 1080, crop: 'limit' },
+      { video_codec: 'auto' },
+      { audio_codec: 'aac' },
+      { bit_rate: 'auto' }
+    ],
+    eager_async: true
   }
 });
 

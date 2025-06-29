@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import VideoPlayer from './VideoPlayer';
 import './CourseCard.css';
+import { useAuth } from '../context/AuthContext';
 
 const CourseCard = ({ course }) => {
   const [showVideo, setShowVideo] = useState(false);
+  const { user } = useAuth();
+  const isPurchased = user && user.purchasedCourses && user.purchasedCourses.includes(course._id);
 
   const handleVideoClick = (e) => {
     e.preventDefault();
@@ -13,6 +16,11 @@ const CourseCard = ({ course }) => {
 
   return (
     <div className="course-card">
+      {isPurchased && (
+        <div className="purchased-badge" style={{position:'absolute',top:'16px',right:'16px',background:'linear-gradient(90deg,#48bb78,#4299e1)',color:'#fff',padding:'0.35rem 1.1rem',borderRadius:'16px',fontWeight:700,fontSize:'0.95rem',zIndex:3,boxShadow:'0 2px 8px rgba(72,187,120,0.13)'}}>
+          <span role="img" aria-label="check">✔️</span> تم الشراء
+        </div>
+      )}
       <div className="course-thumbnail">
         {course.video ? (
           <div className="video-thumbnail-container">
