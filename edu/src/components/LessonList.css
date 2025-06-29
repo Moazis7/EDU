@@ -1,0 +1,78 @@
+.lesson-list h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.lesson-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lesson-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.lesson-item:last-child {
+  border-bottom: none;
+}
+
+.lesson-item:hover {
+  background-color: #f5f3ff;
+}
+
+.lesson-item.active {
+  background-color: #ede9fe;
+  color: #5a4fcf;
+  font-weight: 600;
+}
+
+.lesson-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.lesson-index {
+  font-size: 1rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.lesson-item.active .lesson-index {
+    color: #5a4fcf;
+}
+
+.lesson-title {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.lesson-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #666;
+}
+
+.play-icon {
+  color: #28a745;
+  font-size: 1.5rem;
+}
+.lock-icon {
+  color: #6c757d;
+  font-size: 1.3rem;
+}
+
+.lesson-item.active .play-icon {
+    color: #5a4fcf;
+} 

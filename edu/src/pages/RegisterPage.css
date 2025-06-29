@@ -1,0 +1,322 @@
+/* RegisterPage.css - Modern, Professional Style for Register Page Only (Scoped) */
+
+.register-bg {
+  min-height: 100vh;
+  background: #f7f8fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-card {
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 6px 32px rgba(90, 79, 207, 0.10), 0 1.5px 6px rgba(90, 79, 207, 0.07);
+  padding: 2.5rem 2.2rem 2rem;
+  min-width: 340px;
+  max-width: 95vw;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  align-items: center;
+}
+
+.register-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #5a4fcf;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.register-form {
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.register-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.register-form-group label {
+  font-size: 0.97rem;
+  color: #5a4fcf;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+/* Icon input group for Register/Login forms */
+.register-card .input-icon-group,
+.register-right-panel .input-icon-group {
+  display: flex;
+  align-items: center;
+  background: #f3f6fa;
+  border-radius: 14px;
+  border: 1.5px solid #e0e0f0;
+  padding: 0.1rem 1.1rem 0.1rem 0.3rem;
+  transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+  margin-bottom: 2px;
+}
+
+.register-card .input-icon-group:focus-within,
+.register-right-panel .input-icon-group:focus-within {
+  border: 1.7px solid #5a4fcf;
+  box-shadow: 0 2px 12px rgba(90, 79, 207, 0.10);
+  background: #f3f1fd;
+}
+
+.register-card .input-icon,
+.register-right-panel .input-icon {
+  color: #b3a7e6;
+  font-size: 1.2rem;
+  margin-right: 0.7rem;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.register-card .input-icon-group input,
+.register-card .input-icon-group select,
+.register-right-panel .input-icon-group input,
+.register-right-panel .input-icon-group select {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1rem;
+  padding: 0.7rem 0 0.7rem 0;
+  width: 100%;
+  color: #333;
+  border-radius: 14px;
+}
+
+.register-card .input-icon-group input:focus,
+.register-card .input-icon-group select:focus,
+.register-right-panel .input-icon-group input:focus,
+.register-right-panel .input-icon-group select:focus {
+  background: transparent;
+}
+
+.register-card .register-btn {
+  background: linear-gradient(90deg, #5a4fcf 60%, #7b6ffb 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.08rem;
+  border: none;
+  border-radius: 999px !important;
+  padding: 0.8rem 0;
+  margin-top: 0.7rem;
+  margin-bottom: 0.7rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(90, 79, 207, 0.08);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  width: 100%;
+  letter-spacing: 0.5px;
+}
+
+.register-card .register-btn:active {
+  transform: scale(0.98);
+}
+
+.register-card .register-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.register-form-error {
+  color: #e74c3c;
+  background: #fff0f0;
+  border-radius: 7px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.97rem;
+  margin-bottom: -0.5rem;
+  text-align: center;
+}
+
+.register-form-success {
+  color: #219150;
+  background: #eafaf1;
+  border-radius: 7px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.97rem;
+  margin-bottom: -0.5rem;
+  text-align: center;
+}
+
+.register-alt-link {
+  text-align: center;
+  font-size: 0.98rem;
+  color: #888;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.register-alt-link a {
+  color: #5a4fcf;
+  font-weight: 700;
+  text-decoration: none;
+  margin-right: 2px;
+  transition: color 0.2s;
+}
+
+.register-alt-link a:hover {
+  color: #7b6ffb;
+}
+
+@media (max-width: 600px) {
+  .register-card {
+    padding: 1.5rem 0.7rem 1.2rem;
+    min-width: unset;
+  }
+  .register-card .input-icon-group {
+    padding: 0.1rem 0.4rem 0.1rem 0.1rem;
+  }
+  .register-card .input-icon {
+    font-size: 1rem;
+    margin-right: 0.4rem;
+  }
+}
+
+.register-split-card {
+  display: flex;
+  flex-direction: row;
+  width: 700px;
+  max-width: 98vw;
+  min-height: 420px;
+  background: #fff;
+  border-radius: 30px;
+  box-shadow: 0 8px 32px rgba(90, 79, 207, 0.13), 0 2px 8px rgba(90, 79, 207, 0.09);
+  overflow: hidden;
+}
+
+.register-left-panel {
+  background: linear-gradient(135deg, #1cc6fd 60%, #5a4fcf 100%);
+  color: #fff;
+  flex: 1.1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  text-align: center;
+}
+
+.register-left-panel h2 {
+  font-size: 2.1rem;
+  font-weight: 800;
+  margin-bottom: 0.7rem;
+}
+
+.register-left-panel p {
+  font-size: 1.08rem;
+  margin-bottom: 2.2rem;
+  opacity: 0.95;
+}
+
+.register-panel-btn {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  padding: 0.7rem 2.2rem;
+  font-size: 1.08rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+.register-panel-btn:hover {
+  background: #fff;
+  color: #1cc6fd;
+}
+
+.register-right-panel {
+  flex: 1.4;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5rem 2.2rem 2rem;
+  min-height: 420px;
+}
+
+.register-right-panel .register-btn {
+  border-radius: 999px !important;
+  font-size: 1.08rem;
+  font-weight: 700;
+  padding: 0.8rem 0;
+  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, #5a4fcf 60%, #7b6ffb 100%);
+  color: #fff;
+  border: none;
+  width: 100%;
+  margin-top: 0.7rem;
+  margin-bottom: 0.7rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(90, 79, 207, 0.08);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.register-right-panel .register-btn:active {
+  transform: scale(0.98);
+}
+
+.register-right-panel .register-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .register-split-card {
+    flex-direction: column;
+    width: 98vw;
+    min-width: unset;
+    min-height: unset;
+  }
+  .register-left-panel, .register-right-panel {
+    border-radius: 0;
+    padding: 2rem 1rem;
+  }
+  .register-left-panel {
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-left-radius: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .register-split-card {
+    flex-direction: column;
+    width: 100vw;
+    min-width: unset;
+    min-height: unset;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .register-left-panel, .register-right-panel {
+    border-radius: 0;
+    padding: 1.2rem 0.5rem;
+  }
+  .register-left-panel {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}

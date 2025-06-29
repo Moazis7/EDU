@@ -1,0 +1,15 @@
+/* App-wide styles */
+.App {
+  min-height: 100vh;
+  background: #f8f9fa;
+  
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  margin: 0 auto;
+  padding-top: 80px; /* To offset the fixed header */
+  padding-bottom: 2rem;
+} 
