@@ -6,6 +6,20 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
+// Add a request interceptor to include the token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 export const getCourses = async () => {
   try {
     const response = await api.get('/upload'); // Matches your backend route
@@ -59,10 +73,7 @@ export const login = async (credentials) => {
 
 export const getAdminStats = async () => {
   try {
-    const token = localStorage.getItem('token');
-    const response = await api.get('/users/admin/stats', {
-      headers: { 'y-auth-token': token }
-    });
+    const response = await api.get('/users/admin/stats');
     return response.data;
   } catch (error) {
     console.error('Error fetching admin stats:', error.response ? error.response.data : error.message);
@@ -82,10 +93,7 @@ export const getAdminStats = async () => {
 
 export const getAllUsers = async () => {
   try {
-    const token = localStorage.getItem('token');
-    const response = await api.get('/users/all', {
-      headers: { 'y-auth-token': token }
-    });
+    const response = await api.get('/users/all');
     return response.data;
   } catch (error) {
     console.error('Error fetching users:', error.response ? error.response.data : error.message);
@@ -94,33 +102,25 @@ export const getAllUsers = async () => {
 };
 
 export const deleteUser = async (userId) => {
-  const token = localStorage.getItem('token');
-  return api.delete(`/users/${userId}`, { headers: { 'y-auth-token': token } });
+  return api.delete(`/users/${userId}`);
 };
 
 export const updateUser = async (userId, data) => {
-  const token = localStorage.getItem('token');
-  return api.put(`/users/${userId}`, data, { headers: { 'y-auth-token': token } });
+  return api.put(`/users/${userId}`, data);
 };
 
 export const deleteCourse = async (courseId) => {
-  const token = localStorage.getItem('token');
-  return api.delete(`/upload/${courseId}`, { headers: { 'y-auth-token': token } });
+  return api.delete(`/upload/${courseId}`);
 };
 
 export const updateCourse = async (courseId, data) => {
-  const token = localStorage.getItem('token');
-  return api.put(`/upload/${courseId}`, data, { headers: { 'y-auth-token': token } });
+  return api.put(`/upload/${courseId}`, data);
 };
 
 export const addCourse = async (data, onProgress) => {
   try {
-    const token = localStorage.getItem('token');
-    console.log('🔐 Token available:', !!token);
-    
     const config = {
       headers: { 
-        'y-auth-token': token,
         'Content-Type': 'multipart/form-data' // Important for file uploads
       },
       onUploadProgress: (progressEvent) => {
@@ -131,11 +131,7 @@ export const addCourse = async (data, onProgress) => {
       }
     };
     
-    console.log('🌐 Sending POST request to /upload');
-    console.log('📋 Request config:', config);
-    
     const response = await api.post('/upload', data, config);
-    console.log('✅ Course added successfully:', response.data);
     return response.data;
   } catch (error) {
     console.error('❌ Error in addCourse:', error);
@@ -145,18 +141,15 @@ export const addCourse = async (data, onProgress) => {
 };
 
 export const addCategory = async (data) => {
-  const token = localStorage.getItem('token');
-  return api.post('/category', data, { headers: { 'y-auth-token': token } });
+  return api.post('/category', data);
 };
 
 export const deleteCategory = async (categoryId) => {
-  const token = localStorage.getItem('token');
-  return api.delete(`/category/${categoryId}`, { headers: { 'y-auth-token': token } });
+  return api.delete(`/category/${categoryId}`);
 };
 
 export const updateCategory = async (categoryId, data) => {
-  const token = localStorage.getItem('token');
-  return api.put(`/category/${categoryId}`, data, { headers: { 'y-auth-token': token } });
+  return api.put(`/category/${categoryId}`, data);
 };
 
 export const getCoursesByCategory = async (categoryId) => {

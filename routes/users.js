@@ -64,8 +64,8 @@ router.post('/', async (req, res) => {
 // **GET**: استعراض جميع المستخدمين (للمسؤول فقط)
 router.get('/all', authMiddleware, checkRole('admin'), async (req, res) => {
     try {
-        const users = await User.find().select('-password');
-        res.status(200).send(users);
+        const users = await User.find().select('-password').populate('purchasedCourses', 'title');
+        res.status(200).send({ users });
     } catch (error) {
         res.status(500).send({ message: 'Failed to retrieve users.', error: error.message });
     }
