@@ -1,4 +1,6 @@
+@import url('./styles/variables.css');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
 
 body {
   margin: 0;
@@ -7,8 +9,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8f9fa;
-  color: #333;
+  background-color: var(--background-light);
+  color: var(--text-color-primary);
 }
 
 code {

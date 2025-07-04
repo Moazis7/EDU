@@ -1,9 +1,12 @@
 .courses-page {
   padding-bottom: 4rem;
+  padding-top: 2.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .courses-header-hero {
-  padding: 4rem 2rem;
+  padding: 4rem 2.5rem 2.5rem 2.5rem;
   background: linear-gradient(45deg, #5a4fcf 0%, #9c27b0 100%);
   color: white;
   text-align: center;
@@ -74,9 +77,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem 2rem 2rem 2rem;
+  padding: 1.5rem 2rem 2.5rem 2rem;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto 0.5rem auto;
 }
 
 .level-filters h3, .subject-filters h3 {
@@ -158,12 +161,18 @@
 }
 
 .courses-grid {
-  padding: 0 2rem 2rem 2rem; /* Adjusted padding */
+  padding: 0 2.5rem 5rem 2.5rem;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 2.5rem auto 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 5rem 5rem;
+  align-items: start;
+  grid-auto-rows: 700px;
+}
+
+.modern-course-card {
+  margin-bottom: 2.5rem;
 }
 
 .loading-message, .error-message, .no-results-message {
@@ -190,6 +199,20 @@
 }
 
 @media (max-width: 900px) {
+  .courses-page {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .courses-header-hero {
+    padding: 2.5rem 1rem 1.5rem 1rem;
+  }
+  .courses-grid {
+    padding: 0 0.5rem 1.5rem 0.5rem;
+    gap: 1.2rem;
+  }
+  .level-filters, .subject-filters {
+    padding: 1rem 0.5rem 1.2rem 0.5rem;
+  }
   .subject-cards-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem 1.5rem;
@@ -236,5 +259,13 @@
     min-width: 120px;
     min-height: 140px;
     padding: 1rem 0.5rem 0.5rem 0.5rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .courses-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem 0;
+    padding: 0 0.5rem 1.5rem 0.5rem;
   }
 } 

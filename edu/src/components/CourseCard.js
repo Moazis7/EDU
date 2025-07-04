@@ -1,88 +1,58 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import VideoPlayer from './VideoPlayer';
+import { FaUser, FaStar, FaBookOpen } from 'react-icons/fa';
 import './CourseCard.css';
 import { useAuth } from '../context/AuthContext';
 
-const CourseCard = ({ course }) => {
-  const [showVideo, setShowVideo] = useState(false);
+const CourseCard = ({ course, isMyCourseCard = false }) => {
   const { user } = useAuth();
-  const isPurchased = user && user.purchasedCourses && user.purchasedCourses.includes(course._id);
+  if (!course) {
+    return null;
+  }
 
-  const handleVideoClick = (e) => {
-    e.preventDefault();
-    setShowVideo(!showVideo);
-  };
+  const purchased = user && user.purchasedCourses && user.purchasedCourses.includes(course._id);
+
+  // بيانات احتياطية
+  const teacherName = course.teacher?.name || 'غير محدد';
+  const teacherAvatar = course.teacher?.avatar || '/default-teacher.png';
+  const lessonsCount = course.lessonsCount ?? course.lessons?.length ?? 0;
+  const rating = course.rating ?? 4.8;
+  const category = course.category?.name || 'تصنيف';
+  const price = course.price > 0 ? `${course.price} ج.م` : 'مجاني';
 
   return (
-    <div className="course-card">
-      {isPurchased && (
-        <div className="purchased-badge" style={{position:'absolute',top:'16px',right:'16px',background:'linear-gradient(90deg,#48bb78,#4299e1)',color:'#fff',padding:'0.35rem 1.1rem',borderRadius:'16px',fontWeight:700,fontSize:'0.95rem',zIndex:3,boxShadow:'0 2px 8px rgba(72,187,120,0.13)'}}>
-          <span role="img" aria-label="check">✔️</span> تم الشراء
-        </div>
-      )}
-      <div className="course-thumbnail">
-        {course.video ? (
-          <div className="video-thumbnail-container">
-            {showVideo ? (
-              <VideoPlayer 
-                videoUrl={course.video}
-                poster={course.thumbnail}
-                title={course.title}
-              />
-            ) : (
-              <>
-                <img 
-                  src={course.thumbnail || '/default-course-thumbnail.jpg'} 
-                  alt={course.title} 
-                  className="course-image"
-                />
-                <button 
-                  className="play-button"
-                  onClick={handleVideoClick}
-                  title="Play Preview"
-                >
-                  ▶️
-                </button>
-              </>
-            )}
-          </div>
-        ) : (
-          <img 
-            src={course.thumbnail || '/default-course-thumbnail.jpg'} 
-            alt={course.title} 
-            className="course-image"
-          />
+    <div className="modern-course-card square-card">
+      <div className="modern-card-image-wrapper">
+        {(isMyCourseCard || purchased) && (
+          <div className="mycourse-badge">تم الشراء</div>
         )}
+        <img 
+          src={course.thumbnail || '/default-course-thumbnail.jpg'} 
+          alt={course.title} 
+          className="modern-card-image"
+        />
       </div>
-      
-      <div className="course-content">
-        <h3 className="course-title">{course.title}</h3>
-        <p className="course-description">
-          {course.description?.substring(0, 100)}...
-        </p>
-        
-        <div className="course-meta">
-          <span className="course-price">${course.price}</span>
-          <span className="course-level">{course.level}</span>
-          {course.category?.name && (
-            <span className="course-category">{course.category.name}</span>
-          )}
+      <div className="modern-card-content">
+        <h2 className="course-card-title">{course.title}</h2>
+        <div className="card-title-divider"></div>
+        {course.description && (
+          <div className="course-card-description">
+            <FaBookOpen className="desc-icon" />
+            <span>{course.description}</span>
+          </div>
+        )}
+        <div className="course-card-category-badge">{course.category?.name || 'بدون تصنيف'}</div>
+        <div className="modern-card-teacher">
+          <span>{teacherName}</span>
         </div>
-        
-        <div className="course-actions">
-          <Link to={`/course/${course._id}`} className="view-course-btn">
-            View Course
-          </Link>
-          {course.video && (
-            <button 
-              className="preview-btn"
-              onClick={handleVideoClick}
-            >
-              {showVideo ? 'Hide Preview' : 'Preview'}
-            </button>
-          )}
+        <div className="modern-card-meta">
+          <span title="عدد الدروس"><FaBookOpen /> {lessonsCount}</span>
+          <span title="التقييم"><FaStar className="star" /> {rating}</span>
         </div>
+        <span className="course-card-price">{course.price === 0 ? 'مجاني' : `${course.price} جنيه`}</span>
+        <Link to={`/course/${course._id}`} className="buy-course-btn purple-gradient-btn">
+          {(isMyCourseCard || purchased) ? 'ابدأ الكورس' : 'اشتري الدرس'}
+        </Link>
       </div>
     </div>
   );

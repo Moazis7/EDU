@@ -8,8 +8,8 @@
   align-items: center;
   min-height: 80vh;
   padding: 1rem 2rem;
-  background-color: #f8f9fa; /* Lighter background */
-  color: #333;
+  background-color: var(--background-light);
+  color: var(--text-color-primary);
   position: relative; /* Needed for icon container */
   overflow: hidden; /* Hide icons that float out of view */
 }
@@ -28,6 +28,20 @@
 @media (min-width: 992px) {
   .hero-content-split {
     grid-template-columns: 1fr 1fr;
+    direction: rtl;
+  }
+  .hero-text {
+    text-align: right;
+  }
+  .hero-text .hero-cta-new {
+    display: inline-block;
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .hero-text > div:last-child {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
   }
 }
 
@@ -48,7 +62,7 @@
 
 .hero-main-icon {
   font-size: 20rem; /* Large icon size */
-  color: rgba(90, 79, 207, 0.15); /* Semi-transparent color */
+  color: rgba(90, 79, 207, 0.15); /* Kept for specific opacity */
 }
 
 .hero-title-gradient {
@@ -58,7 +72,7 @@
   line-height: 1.2;
   margin-bottom: 1.5rem;
   /* The gradient effect */
-  background: linear-gradient(45deg, #5a4fcf, #9c27b0, #d9006c);
+  background: var(--hero-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -67,7 +81,7 @@
 
 .hero-subtitle {
   font-size: 1.2rem;
-  color: #555;
+  color: var(--text-color-secondary);
   margin-bottom: 2.5rem;
   max-width: 500px;
 }
@@ -75,15 +89,15 @@
 /* Keyframes for a glowing shadow pulse */
 @keyframes pulse-shadow {
   0% {
-    box-shadow: 0 4px 20px rgba(90, 79, 207, 0.3);
+    box-shadow: 0 4px 20px var(--shadow-primary-lg);
   }
   
   50% {
-    box-shadow: 0 6px 25px rgba(90, 79, 207, 0.5); /* More spread and intense */
+    box-shadow: 0 6px 25px rgba(90, 79, 207, 0.5); /* Kept for specific effect */
   }
   
   100% {
-    box-shadow: 0 4px 20px rgba(90, 79, 207, 0.3);
+    box-shadow: 0 4px 20px var(--shadow-primary-lg);
   }
 }
 
@@ -91,14 +105,14 @@
   position: relative; /* Crucial for pseudo-element positioning */
   z-index: 1;
   display: inline-block;
-  background: #5a4fcf;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--text-on-primary);
   padding: 1rem 2.5rem;
   border-radius: 50px;
   text-decoration: none;
   font-weight: 600;
   font-size: 1.1rem;
-  box-shadow: 0 4px 20px rgba(90, 79, 207, 0.3);
+  box-shadow: 0 4px 20px var(--shadow-primary-lg);
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* For hover effect */
   animation: pulse-shadow 2.5s infinite ease-in-out; /* Apply the glow */
 }
@@ -111,13 +125,13 @@
 .hero-cta-new:hover {
   animation: none; /* Stop the pulse on hover for immediate feedback */
   transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(90, 79, 207, 0.6); /* A stronger, static shadow on hover */
+  box-shadow: 0 8px 30px var(--shadow-primary-xl);
 }
 
 /* Why Choose Us Section */
 .why-choose-us {
   padding: 5rem 2rem;
-  background-color: #f8f9fa;
+  background-color: var(--background-light);
 }
 
 .features-grid {
@@ -129,22 +143,22 @@
 }
 
 .feature-card {
-  background: #fff;
+  background: var(--surface-light);
   padding: 2rem;
   text-align: center;
   border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px var(--shadow-sm);
   transition: all 0.3s ease;
 }
 
 .feature-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px var(--shadow-md);
 }
 
 .feature-icon {
   font-size: 3rem;
-  color: #5a4fcf;
+  color: var(--primary-color);
   margin-bottom: 1.5rem;
 }
 
@@ -156,7 +170,7 @@
 /* Featured Courses Section */
 .featured-courses {
   padding: 5rem 2rem;
-  background-color: #fff;
+  background-color: var(--surface-light);
 }
 
 .section-title {
@@ -164,7 +178,7 @@
   font-weight: 700;
   text-align: center;
   margin-bottom: 3rem;
-  color: #333;
+  color: var(--text-color-primary);
 }
 
 .courses-grid {
@@ -177,8 +191,8 @@
 
 /* Stats Section */
 .stats-section {
-  background-color: #5a4fcf;
-  color: #fff;
+  background-color: var(--primary-color);
+  color: var(--text-on-primary);
   padding: 4rem 2rem;
 }
 
@@ -222,7 +236,7 @@
 /* Testimonials Section */
 .testimonials-section {
   padding: 5rem 2rem;
-  background-color: #f8f9fa;
+  background-color: var(--background-light);
 }
 
 .testimonials-grid {
@@ -234,17 +248,17 @@
 }
 
 .testimonial-card {
-  background: #fff;
+  background: var(--surface-light);
   padding: 2rem;
   border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  border-left: 5px solid #5a4fcf;
+  box-shadow: 0 4px 20px var(--shadow-sm);
+  border-left: 5px solid var(--primary-color);
 }
 
 .testimonial-text {
   font-size: 1.1rem;
   font-style: italic;
-  color: #555;
+  color: var(--text-color-secondary);
   margin: 0 0 1.5rem 0;
   line-height: 1.6;
 }
@@ -263,31 +277,22 @@
 }
 
 .author-info {
-  display: flex;
-  flex-direction: column;
+  text-align: left;
 }
-
 .author-name {
-  font-weight: 700;
-  color: #333;
+  font-weight: 600;
+  margin: 0;
 }
-
 .author-role {
   font-size: 0.9rem;
-  color: #777;
+  color: var(--text-color-light);
+  margin: 0;
 }
 
-/* Floating Icons */
 @keyframes float {
-  0% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-20px) rotate(10deg);
-  }
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
 }
 
 .floating-icons-container {
@@ -296,12 +301,13 @@
   left: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none; /* Make sure they don't block clicks */
   z-index: 0;
 }
 
 .floating-icon {
   position: absolute;
-  color: rgba(90, 79, 207, 0.1);
+  color: rgba(90, 79, 207, 0.1); /* Kept for specific effect */
   animation: float 6s ease-in-out infinite;
 }
 

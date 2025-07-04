@@ -51,7 +51,14 @@ router.post('/', async (req, res) => {
         res.header('y-auth-token', token).json({
             message: 'Login successful',
             token: token,
-            user: _.pick(user, ['_id', 'name', 'email', 'role', 'lastLogin'])
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                lastLogin: user.lastLogin,
+                purchasedCourses: user.purchasedCourses
+            }
         });
     } catch (err) {
         console.error('Error:', err.message);

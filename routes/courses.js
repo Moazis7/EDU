@@ -664,4 +664,18 @@ router.get('/category/:categoryId', async (req, res) => {
   }
 });
 
+// جلب بيانات الكورسات بناءً على مصفوفة معرفات
+router.post('/by-ids', async (req, res) => {
+  try {
+    const { ids } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: 'No course ids provided', courses: [] });
+    }
+    const courses = await Course.find({ _id: { $in: ids } }).populate('category');
+    res.json({ courses });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching courses by ids', error: err.message });
+  }
+});
+
 module.exports = router;

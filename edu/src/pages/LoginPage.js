@@ -35,12 +35,12 @@ const LoginPage = () => {
       const data = await login(form);
       // استخدام AuthContext بدلاً من localStorage مباشرة
       authLogin(data.user, data.token);
-      setSuccess('تم تسجيل الدخول بنجاح!');
+      setSuccess('دخولك تم بنجاح! بنجهزلك الصفحة...');
       setTimeout(() => {
         navigate('/');
       }, 800);
     } catch (err) {
-      setError(err.message || 'فشل تسجيل الدخول');
+      setError(err.message || 'فيه حاجة غلط في البيانات، جرب تاني!');
     } finally {
       setLoading(false);
     }
@@ -50,7 +50,7 @@ const LoginPage = () => {
     <div className="login-bg">
       <motion.div className="login-split-card" variants={cardVariants} initial="hidden" animate="visible">
         <div className="login-left-panel">
-          <h2>Hello, Friend!</h2>
+          <h2>يلا بينا نسجل دخولك!</h2>
           <p>Register now to enjoy all features of the site</p>
           <Link to="/register" className="login-panel-btn">SIGN UP</Link>
         </div>
@@ -61,23 +61,23 @@ const LoginPage = () => {
               <label>Email</label>
               <div className="input-icon-group">
                 <FaEnvelope className="input-icon" />
-                <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="you@email.com" />
+                <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="ايميلك هنا..." />
               </div>
             </div>
             <div className="login-form-group">
               <label>Password</label>
               <div className="input-icon-group">
                 <FaLock className="input-icon" />
-                <input type="password" name="password" value={form.password} onChange={handleChange} required placeholder="Password" />
+                <input type="password" name="password" value={form.password} onChange={handleChange} required placeholder="كلمة السر..." />
               </div>
             </div>
-            {error && <div className="login-form-error">{error}</div>}
-            {success && <div className="login-form-success">{success}</div>}
+            {error && <div className="error-message">{error === 'فشل تسجيل الدخول' ? 'فيه حاجة غلط في البيانات، جرب تاني!' : error}</div>}
+            {success && <div className="success-message">{success}</div>}
             <button className="login-btn" type="submit" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
+              <FaSignInAlt /> {loading ? 'ثانية واحدة...' : 'ادخل على حسابك'}
             </button>
-            <div className="login-alt-link">
-              Don't have an account? <Link to="/register">Register</Link>
+            <div className="register-link">
+              لسه معملتش حساب؟ <Link to="/register">سجل جديد من هنا</Link>
             </div>
           </form>
         </div>

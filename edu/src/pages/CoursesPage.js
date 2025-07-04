@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { getCourses, getCategories } from '../services/api';
 import CourseCard from '../components/CourseCard';
+import CourseCardSkeleton from '../components/CourseCardSkeleton';
 import './CoursesPage.css';
-import { FaSearch, FaGraduationCap, FaBook } from 'react-icons/fa';
+import { FaSearch, FaGraduationCap, FaBook, FaStar, FaBolt, FaMoneyBillWave } from 'react-icons/fa';
 import SubjectCard from '../components/SubjectCard';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,12 +43,18 @@ const letter = {
 
 // Predefined educational levels
 const educationalLevels = [
-  { id: 'prep1', name: 'الصف الأول الإعدادي', arabicName: 'الصف الأول الإعدادي' },
-  { id: 'prep2', name: 'الصف الثاني الإعدادي', arabicName: 'الصف الثاني الإعدادي' },
-  { id: 'prep3', name: 'الصف الثالث الإعدادي', arabicName: 'الصف الثالث الإعدادي' },
-  { id: 'sec1', name: 'الصف الأول الثانوي', arabicName: 'الصف الأول الثانوي' },
-  { id: 'sec2', name: 'الصف الثاني الثانوي', arabicName: 'الصف الثاني الثانوي' },
-  { id: 'sec3', name: 'الصف الثالث الثانوي', arabicName: 'الصف الثالث الثانوي' }
+  { id: 'prep1', name: 'الصف الأول الإعدادي', arabicName: 'أولى إعدادي' },
+  { id: 'prep2', name: 'الصف الثاني الإعدادي', arabicName: 'تانية إعدادي' },
+  { id: 'prep3', name: 'الصف الثالث الإعدادي', arabicName: 'تالتة إعدادي' },
+  { id: 'sec1', name: 'الصف الأول الثانوي', arabicName: 'أولى ثانوي' },
+  { id: 'sec2', name: 'الصف الثاني الثانوي', arabicName: 'تانية ثانوي' },
+  { id: 'sec3', name: 'الصف الثالث الثانوي', arabicName: 'تالتة ثانوي' }
+];
+
+const priceFilters = [
+  { id: 'all', label: 'الكل' },
+  { id: 'free', label: 'مجاني' },
+  { id: 'paid', label: 'مدفوع' }
 ];
 
 const CoursesPage = () => {
@@ -57,9 +64,11 @@ const CoursesPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedLevel, setSelectedLevel] = useState('All');
+  const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState('All');
+  const [selectedPrice, setSelectedPrice] = useState('all');
   const [subjects, setSubjects] = useState([]);
+  const [showCount, setShowCount] = useState(9); // For pagination
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,63 +77,156 @@ const CoursesPage = () => {
         setLoading(true);
         const coursesPromise = getCourses();
         const categoriesPromise = getCategories();
-
         const [coursesData, categoriesData] = await Promise.all([coursesPromise, categoriesPromise]);
-        
         const coursesArray = coursesData.products || coursesData;
         setCourses(coursesArray);
-        setFilteredCourses(coursesArray);
         setCategories(categoriesData);
-
         setError(null);
       } catch (err) {
-        setError('Failed to fetch data. Please try again later.');
+        setError('فيه مشكلة حصلت، حاول تاني بعد شوية.');
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
   // Update subjects when level changes
   useEffect(() => {
-    if (selectedLevel === 'All') {
-      setSubjects([]);
-      setSelectedSubject('All');
-    } else {
+    if (selectedLevel) {
       const levelSubjects = categories.filter(cat => cat.level === selectedLevel);
       setSubjects(levelSubjects);
+      setSelectedSubject('All');
+    } else {
+      setSubjects([]);
       setSelectedSubject('All');
     }
   }, [selectedLevel, categories]);
 
+  // Filtering logic
   useEffect(() => {
     let results = courses;
-
-    // Filter by level
-    if (selectedLevel !== 'All') {
+    if (selectedLevel) {
       results = results.filter(course => course.level === selectedLevel);
     }
-
-    // Filter by subject
     if (selectedSubject !== 'All') {
       results = results.filter(course => course.category && course.category._id === selectedSubject);
     }
-
-    // Filter by search term
+    if (selectedPrice === 'free') {
+      results = results.filter(course => course.price === 0);
+    } else if (selectedPrice === 'paid') {
+      results = results.filter(course => course.price > 0);
+    }
     if (searchTerm) {
-        results = results.filter(course =>
-            course && course.title && course.title.toLowerCase().includes(searchTerm.toLowerCase())
+      results = results.filter(course =>
+        course && course.title && course.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    setFilteredCourses(results);
+  }, [searchTerm, selectedLevel, selectedSubject, selectedPrice, courses]);
+
+  // Animation variants
+  const gridVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.08,
+      },
+    },
+  };
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, type: 'spring', bounce: 0.18 } },
+  };
+
+  // Skeleton loader
+  const renderSkeletons = () => (
+    <div className="courses-grid">
+      {Array.from({ length: 6 }).map((_, index) => (
+        <CourseCardSkeleton key={index} />
+      ))}
+    </div>
+  );
+
+  // Pagination logic
+  const handleShowMore = () => setShowCount(count => count + 9);
+
+  if (loading && !selectedLevel) {
+    return (
+        <div className="courses-page">
+            <div className="courses-header-hero">
+                <motion.h1
+                    className="animated-title"
+                    variants={sentence}
+                    initial="hidden"
+                    animate="visible"
+                >
+                  {title.split("").map((char, index) => {
+                    return (
+                      <motion.span key={char + "-" + index} variants={letter}>
+                        {char}
+                      </motion.span>
+                    )
+                  })}
+                </motion.h1>
+                <p>اكتشف كل الكورسات اللي ممكن تبدأ بيها رحلتك.</p>
+            </div>
+            <div className="search-and-filter-bar">
+                <div className="search-container">
+                  <FaSearch className="search-icon" />
+                  <input
+                    type="text"
+                    placeholder="دور على كورس..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                  />
+                </div>
+            </div>
+            {renderSkeletons()}
+        </div>
+    );
+  }
+
+  if (error) return <div className="error-message">{error}</div>;
+
+  const renderCourses = () => {
+    if (loading) {
+      return renderSkeletons();
+    }
+
+    if (selectedSubject !== 'All') {
+      if (filteredCourses.length > 0) {
+        return (
+          <motion.div
+            className="courses-grid"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {filteredCourses.map(course => (
+              <CourseCard key={course._id} course={course} />
+            ))}
+          </motion.div>
         );
+      } else {
+        return <p className="no-results-message">لا توجد كورسات متاحة لهذه المادة حالياً.</p>;
+      }
+    }
+
+    if (!selectedLevel) {
+      return (
+        <p className="no-results-message" style={{ marginTop: '2rem' }}>
+          الرجاء اختيار مرحلة تعليمية لعرض المواد المتاحة.
+        </p>
+      );
     }
     
-    setFilteredCourses(results);
-  }, [searchTerm, selectedLevel, selectedSubject, courses]);
-
-  if (loading) return <div className="loading-message">Loading courses...</div>;
-  if (error) return <div className="error-message">{error}</div>;
+    // If a level is selected but not a subject yet, we don't show courses
+    // This part can be left empty or show another message if desired
+    return null;
+  };
 
   return (
     <div className="courses-page">
@@ -143,36 +245,27 @@ const CoursesPage = () => {
             )
           })}
         </motion.h1>
-        <p>Find the perfect course to kickstart your learning journey.</p>
+        <p>اكتشف كل الكورسات اللي ممكن تبدأ بيها رحلتك.</p>
       </div>
-
       <div className="search-and-filter-bar">
         <div className="search-container">
           <FaSearch className="search-icon" />
           <input
             type="text"
-            placeholder="Search for courses..."
+            placeholder="دور على كورس..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
         </div>
       </div>
-
-      {/* Educational Level Filters */}
       <div className="level-filters">
-        <h3><FaGraduationCap /> Educational Levels</h3>
+        <h3><FaGraduationCap /> اختر المرحلة التعليمية:</h3>
         <div className="level-buttons">
-          <button
-            className={`level-button ${selectedLevel === 'All' ? 'active' : ''}`}
-            onClick={() => setSelectedLevel('All')}
-          >
-            All Levels
-          </button>
           {educationalLevels.map(level => (
             <button
               key={level.id}
-              className={`level-button ${selectedLevel === level.id ? 'active' : ''}`}
+              className={`level-button${selectedLevel === level.id ? ' active' : ''}`}
               onClick={() => setSelectedLevel(level.id)}
             >
               {level.arabicName}
@@ -180,47 +273,42 @@ const CoursesPage = () => {
           ))}
         </div>
       </div>
-
-      {/* Subject Filters */}
-      {selectedLevel !== 'All' && subjects.length > 0 && (
+      {selectedLevel && subjects.length > 0 && (
         <div className="subject-filters">
-          <h3><FaBook /> Subjects</h3>
-          <div className="subject-cards-grid">
-            {subjects.map(subject => {
-              // Calculate course count for this subject
-              const subjectCourseCount = courses.filter(course => 
-                course.category && course.category._id === subject._id
-              ).length;
-              
-              return (
-                <SubjectCard
-                  key={subject._id}
-                  subject={subject}
-                  selected={selectedSubject === subject._id}
-                  onClick={() => setSelectedSubject(subject._id)}
-                  onShowCourses={() => navigate(`/subject/${subject._id}`)}
-                  courseCount={subjectCourseCount}
-                />
-              );
-            })}
+          <h3><FaBook /> المواد</h3>
+          <div className="subject-buttons">
+            <button
+              className={`subject-button${selectedSubject === 'All' ? ' active' : ''}`}
+              onClick={() => setSelectedSubject('All')}
+            >
+              الكل
+            </button>
+            {subjects.map(subject => (
+              <button
+                key={subject._id}
+                className={`subject-button${selectedSubject === subject._id ? ' active' : ''}`}
+                onClick={() => setSelectedSubject(subject._id)}
+              >
+                {subject.name}
+              </button>
+            ))}
           </div>
         </div>
       )}
-
-      <motion.div
-        className="courses-grid"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map(course => (
+      <div className="courses-grid">
+        {!selectedLevel ? (
+          <div className="no-results-message">اختار المرحلة التعليمية الأول عشان تشوف المواد والكورسات.</div>
+        ) : selectedSubject !== 'All' && filteredCourses.length === 0 ? (
+          <div className="no-results-message">مفيش كورسات متاحة للمادة دي.</div>
+        ) : (
+          filteredCourses.slice(0, showCount).map(course => (
             <CourseCard key={course._id} course={course} />
           ))
-        ) : (
-          <p className="no-results-message">No courses found matching your search.</p>
         )}
-      </motion.div>
+      </div>
+      {!loading && filteredCourses.length > showCount && (
+        <button className="show-more-btn" onClick={handleShowMore}>عرض أكتر</button>
+      )}
     </div>
   );
 };

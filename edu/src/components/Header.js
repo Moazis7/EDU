@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { FaGraduationCap, FaHome, FaBook, FaSignInAlt, FaUserPlus, FaSignOutAlt, FaUserShield, FaListAlt } from 'react-icons/fa';
+import { FaHome, FaBook, FaListAlt, FaSignInAlt, FaUserPlus, FaSignOutAlt, FaUserShield } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import './Header.css';
 
@@ -16,7 +16,9 @@ const Header = () => {
         setScrolled(isScrolled);
       }
     };
+
     document.addEventListener('scroll', handleScroll);
+
     return () => {
       document.removeEventListener('scroll', handleScroll);
     };
@@ -31,25 +33,24 @@ const Header = () => {
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="logo">
         <Link to="/">
-          <FaGraduationCap className="logo-icon" />
-          EduPlatform
+          <h1 className="logo-text">MOisPlatform</h1>
         </Link>
       </div>
       <nav className="main-nav">
         <NavLink to="/" className="nav-link" end>
-          <FaHome className="nav-icon" /> Home
+          <FaHome className="nav-icon" /> الرئيسية
         </NavLink>
         <NavLink to="/courses" className="nav-link">
-          <FaBook className="nav-icon" /> Courses
+          <FaBook className="nav-icon" /> الكورسات
         </NavLink>
         {user && (
           <NavLink to="/my-courses" className="nav-link">
-            <FaListAlt className="nav-icon" /> My Courses
+            <FaListAlt className="nav-icon" /> كورساتي
           </NavLink>
         )}
         {user && user.role === 'admin' && (
           <NavLink to="/admin" className="nav-link">
-            <FaUserShield className="nav-icon" /> Admin
+            <FaUserShield className="nav-icon" /> لوحة المدير
           </NavLink>
         )}
       </nav>
@@ -57,20 +58,20 @@ const Header = () => {
         {!user && (
           <>
             <Link to="/login" className="auth-btn login-btn">
-              <FaSignInAlt /> Login
+              <FaSignInAlt /> دخول
             </Link>
             <Link to="/register" className="auth-btn register-btn">
-              <FaUserPlus /> Register
+              <FaUserPlus /> تسجيل
             </Link>
           </>
         )}
         {user && (
           <>
-            <span className="welcome-user" style={{marginRight: 12, fontWeight: 600, color: '#5a4fcf'}}>
-              Welcome, {user.name}
+            <span className="welcome-user">
+              أهلاً يا {user.name}
             </span>
-            <button className="auth-btn login-btn" onClick={handleLogout} style={{minWidth: 110}}>
-              <FaSignOutAlt /> Logout
+            <button className="auth-btn login-btn" onClick={handleLogout}>
+              <FaSignOutAlt /> خروج
             </button>
           </>
         )}
@@ -79,4 +80,4 @@ const Header = () => {
   );
 };
 
-export default Header; 
+export default Header;

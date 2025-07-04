@@ -63,14 +63,14 @@ const HomePage = () => {
                 variants={containerVariants}
             >
                 <motion.h1 variants={itemVariants} className="hero-title-gradient">
-                    Your Journey to <br /> Knowledge Starts Here
+                    رحلتك للعلم بتبدأ من هنا
                 </motion.h1>
                 <motion.p variants={itemVariants} className="hero-subtitle">
-                    Explore a universe of expert-led courses and unlock your true potential. Creative, flexible, and designed for you.
+                    اكتشف كورسات جامدة مع مدرسين خبرة، وحقق اللي بتحلم بيه! كل حاجة مرنة وسهلة ليك.
                 </motion.p>
                 <motion.div variants={itemVariants} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link to="/courses" className="hero-cta-new">
-                    Discover Courses
+                    شوف الكورسات
                     </Link>
                 </motion.div>
             </motion.div>
@@ -88,7 +88,7 @@ const HomePage = () => {
       </section>
 
       <section className="why-choose-us">
-        <h2 className="section-title">Why EduPlatform?</h2>
+        <h2 className="section-title">ليه تختار منصتنا؟</h2>
         <motion.div 
           className="features-grid"
           variants={containerVariants}
@@ -98,18 +98,18 @@ const HomePage = () => {
         >
           <motion.div variants={itemVariants} className="feature-card">
             <FaChalkboardTeacher className="feature-icon" />
-            <h3>Expert Instructors</h3>
-            <p>Learn from industry professionals who are passionate about teaching.</p>
+            <h3>مدرسين جامدين</h3>
+            <p>هتتعلم من ناس فاهمة وبتحب تشرح بجد.</p>
           </motion.div>
           <motion.div variants={itemVariants} className="feature-card">
             <FaCertificate className="feature-icon" />
-            <h3>Verified Certificates</h3>
-            <p>Earn certificates that are recognized and valued by employers.</p>
+            <h3>شهادات معتمدة</h3>
+            <p>خد شهادة عليها القيمة تفرق معاك في الشغل.</p>
           </motion.div>
           <motion.div variants={itemVariants} className="feature-card">
             <FaHeadset className="feature-icon" />
-            <h3>24/7 Support</h3>
-            <p>Our dedicated team is here to help you anytime, anywhere.</p>
+            <h3>دعم 24 ساعة</h3>
+            <p>أي وقت تحتاجنا فيه، هتلاقينا معاك.</p>
           </motion.div>
         </motion.div>
       </section>
@@ -120,28 +120,28 @@ const HomePage = () => {
             <FaUsers className="stat-icon" />
             <div className="stat-numbers">
               <span className="stat-number">10,000+</span>
-              <span className="stat-label">Active Students</span>
+              <span className="stat-label">طلبة معانا</span>
             </div>
           </motion.div>
           <motion.div className="stat-item" variants={itemVariants}>
             <FaVideo className="stat-icon" />
             <div className="stat-numbers">
               <span className="stat-number">500+</span>
-              <span className="stat-label">Total Courses</span>
+              <span className="stat-label">كورس متاح</span>
             </div>
           </motion.div>
           <motion.div className="stat-item" variants={itemVariants}>
             <FaStar className="stat-icon" />
             <div className="stat-numbers">
               <span className="stat-number">4.9/5</span>
-              <span className="stat-label">Average Rating</span>
+              <span className="stat-label">تقييم الناس</span>
             </div>
           </motion.div>
         </div>
       </section>
 
       <section className="featured-courses">
-        <h2 className="section-title">Featured Courses</h2>
+        <h2 className="section-title">كورسات مميزة</h2>
         <div className="courses-grid">
           {featuredCourses.map(course => (
             <CourseCard key={course._id} course={course} />
@@ -150,7 +150,7 @@ const HomePage = () => {
       </section>
 
       <section className="testimonials-section">
-        <h2 className="section-title">What Our Students Say</h2>
+        <h2 className="section-title">آراء الطلبة فينا</h2>
         <motion.div 
             className="testimonials-grid"
             variants={containerVariants}
@@ -159,22 +159,22 @@ const HomePage = () => {
             viewport={{ once: true, amount: 0.3 }}
         >
           <motion.div className="testimonial-card" variants={itemVariants}>
-            <p className="testimonial-text">"This platform transformed my career. The courses are practical and the instructors are top-notch!"</p>
+            <p className="testimonial-text">"المنصة دي فرقت معايا جدًا! الكورسات عملية والمدرسين بيشرحوا بطريقة سهلة."</p>
             <div className="testimonial-author">
               <img src="https://i.pravatar.cc/150?img=1" alt="Sarah L." className="author-avatar" />
               <div className="author-info">
-                <span className="author-name">Sarah L.</span>
-                <span className="author-role">Software Engineer</span>
+                <span className="author-name">سارة</span>
+                <span className="author-role">مبرمجة</span>
               </div>
             </div>
           </motion.div>
           <motion.div className="testimonial-card" variants={itemVariants}>
-            <p className="testimonial-text">"I finally understood complex topics I've struggled with for years. Highly recommended!"</p>
+            <p className="testimonial-text">"فهمت حاجات كنت فاكرها صعبة بفضل الشرح هنا. أنصح أي حد يجرب بنفسه!"</p>
             <div className="testimonial-author">
               <img src="https://i.pravatar.cc/150?img=2" alt="Mike P." className="author-avatar" />
               <div className="author-info">
-                <span className="author-name">Mike P.</span>
-                <span className="author-role">Data Scientist</span>
+                <span className="author-name">مايكل</span>
+                <span className="author-role">عالم بيانات</span>
               </div>
             </div>
           </motion.div>

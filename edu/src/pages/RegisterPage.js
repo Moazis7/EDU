@@ -44,79 +44,79 @@ const RegisterPage = () => {
     try {
       const data = await registerUser(form);
       authLogin(data.user, data.token);
-      setSuccess('تم التسجيل بنجاح!');
+      setSuccess('تم تسجيلك! هتتحول على صفحة الدخول...');
       setTimeout(() => {
         navigate('/login');
       }, 800);
     } catch (err) {
-      setError(err.message || 'فشل التسجيل');
+      setError(err.message || 'فيه مشكلة في البيانات، جرب تاني!');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="register-bg">
-      <motion.div className="register-split-card" variants={cardVariants} initial="hidden" animate="visible">
-        <div className="register-left-panel">
-          <h2>Welcome Back!</h2>
-          <p>Enter your personal details to use all of site features</p>
-          <Link to="/login" className="register-panel-btn">SIGN IN</Link>
+    <div className="login-bg">
+      <motion.div className="login-split-card" variants={cardVariants} initial="hidden" animate="visible">
+        <div className="login-left-panel">
+          <h2 className="register-title">يلا نعمل حساب جديد!</h2>
+          <p>Already have an account? Sign in to access your dashboard.</p>
+          <Link to="/login" className="login-panel-btn">SIGN IN</Link>
         </div>
-        <div className="register-right-panel">
-          <div className="register-title">
-            <FaUserPlus style={{marginBottom: '-4px', marginRight: '7px', color: '#5a4fcf'}}/> Create Account
+        <div className="login-right-panel">
+          <div className="login-title">
+            <FaUserPlus style={{marginBottom: '-4px', marginRight: '7px', color: 'var(--primary-color)'}}/> Create Account
           </div>
-          <form className="register-form" onSubmit={handleSubmit}>
-            <div className="register-form-group">
+          <form className="login-form" onSubmit={handleSubmit}>
+            <div className="login-form-group">
               <label>Name</label>
               <div className="input-icon-group">
                 <FaUser className="input-icon" />
-                <input type="text" name="name" value={form.name} onChange={handleChange} required placeholder="Your Name" />
+                <input type="text" name="name" value={form.name} onChange={handleChange} required placeholder="اسمك بالكامل..." />
               </div>
             </div>
-            <div className="register-form-group">
+            <div className="login-form-group">
               <label>Email</label>
               <div className="input-icon-group">
                 <FaEnvelope className="input-icon" />
-                <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="you@email.com" />
+                <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="ايميلك..." />
               </div>
             </div>
-            <div className="register-form-group">
+            <div className="login-form-group">
               <label>Password</label>
               <div className="input-icon-group">
                 <FaLock className="input-icon" />
-                <input type="password" name="password" value={form.password} onChange={handleChange} required placeholder="Password" />
+                <input type="password" name="password" value={form.password} onChange={handleChange} required placeholder="كلمة السر..." />
               </div>
             </div>
-            <div className="register-form-group">
+            <div className="login-form-group">
               <label>Phone</label>
               <div className="input-icon-group">
                 <FaPhone className="input-icon" />
-                <input type="tel" name="phone" value={form.phone} onChange={handleChange} required placeholder="0100 000 0000" />
+                <input type="tel" name="phone" value={form.phone} onChange={handleChange} required placeholder="موبايلك..." />
               </div>
             </div>
-            <div className="register-form-group">
+            <div className="login-form-group">
               <label>Governorate</label>
               <div className="input-icon-group">
                 <FaMapMarkerAlt className="input-icon" />
                 <select name="governorate" value={form.governorate} onChange={handleChange} required>
-                  <option value="">Select governorate</option>
+                  <option value="">المحافظة...</option>
                   {EGYPT_GOVS.map(gov => (
                     <option key={gov} value={gov}>{gov}</option>
                   ))}
                 </select>
               </div>
             </div>
-            {error && <div className="register-form-error">{error}</div>}
-            {success && <div className="register-form-success">{success}</div>}
+            {error && <div className="error-message">{error === 'فشل التسجيل' ? 'فيه مشكلة في البيانات، جرب تاني!' : error}</div>}
+            {success && <div className="success-message">{success}</div>}
             <button className="register-btn" type="submit" disabled={loading}>
-              {loading ? 'Registering...' : 'Sign Up'}
+              {loading ? 'ثانية واحدة...' : 'سجل حسابك'}
             </button>
-            <div className="register-alt-link">
-              Already have an account? <Link to="/login">Login</Link>
-            </div>
           </form>
+          <div className="login-link">
+            عندك حساب؟ <Link to="/login">ادخل من هنا</Link>
+          </div>
         </div>
       </motion.div>
     </div>

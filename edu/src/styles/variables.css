@@ -1,0 +1,48 @@
+/* === Global CSS Variables === */
+
+:root {
+  /* Brand Colors */
+  --primary-color: #5a4fcf;
+  --primary-color-dark: #4a3fbf;
+  --primary-color-light: #f6f3ff;
+  --secondary-color: #1cc6fd; /* Example from login panel */
+
+  /* Gradients */
+  --primary-gradient: linear-gradient(90deg, #5a4fcf 60%, #7b6ffb 100%);
+  --primary-gradient-hover: linear-gradient(90deg, #4a3fbf 60%, #6a5ffb 100%);
+  --hero-gradient: linear-gradient(45deg, #5a4fcf, #9c27b0, #d9006c);
+  --footer-border-gradient: linear-gradient(90deg, #5a4fcf, #7c4dff, #9c27b0);
+  --footer-logo-gradient: linear-gradient(45deg, #5a4fcf 30%, #7c4dff 90%);
+
+  /* Text Colors */
+  --text-color-primary: #2d3748;
+  --text-color-secondary: #555;
+  --text-color-light: #718096;
+  --text-on-primary: #ffffff;
+
+  /* Background & Surface Colors */
+  --background-light: #f8f9fa;
+  --surface-light: #ffffff;
+  --surface-alpha: rgba(255, 255, 255, 0.95);
+
+  /* Borders & Shadows */
+  --border-color: #e2e8f0;
+  --shadow-sm: rgba(0, 0, 0, 0.05);
+  --shadow-md: rgba(0, 0, 0, 0.1);
+  --shadow-lg: rgba(0, 0, 0, 0.15);
+  
+  --shadow-primary-sm: rgba(90, 79, 207, 0.08);
+  --shadow-primary-md: rgba(90, 79, 207, 0.13);
+  --shadow-primary-lg: rgba(90, 79, 207, 0.3);
+  --shadow-primary-xl: rgba(90, 79, 207, 0.6);
+
+  /* Other Colors */
+  --green-badge: #48bb78;
+  --blue-badge: #4299e1;
+  --orange-badge: #ed8936;
+  
+  --error-color: #e74c3c;
+  --error-background: #fff0f0;
+  --success-color: #219150;
+  --success-background: #eafaf1;
+} 

@@ -162,6 +162,16 @@ export const getCoursesByCategory = async (categoryId) => {
   }
 };
 
+export const getCoursesByIds = async (ids) => {
+  try {
+    const response = await api.post('/courses/by-ids', { ids });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching courses by ids:', error);
+    throw error;
+  }
+};
+
 // We can add more functions here for other endpoints
 // export const login = (credentials) => api.post('/auth', credentials);
 
