@@ -65,11 +65,14 @@ userSchema.methods.generateAuthToken = function() {
   if (!process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET environment variable is required');
   }
-  
+  let expiresIn = process.env.JWT_EXPIRES_IN || '1h';
+  if (this.role === 'admin') {
+    expiresIn = '12h'; // اجعل توكن الأدمن 12 ساعة
+  }
   const token = jwt.sign(
     { _id: this._id, role: this.role }, 
     process.env.JWT_SECRET, 
-    { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
+    { expiresIn }
   );
   return token;
 };
