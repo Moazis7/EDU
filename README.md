@@ -1,76 +1,99 @@
-# EduBack - Backend API
+EduBack - Backend API
+📋 Overview
+Backend API for an educational platform built using Node.js, Express, and MongoDB.
 
-## 📋 نظرة عامة
-Backend API لمنصة تعليمية مبني باستخدام Node.js و Express و MongoDB.
+🚀 Features
+✅ User registration & login system
 
-## 🚀 الميزات
-- ✅ نظام تسجيل دخول وتسجيل مستخدمين
-- ✅ إدارة الأدوار (مستخدم/مدير)
-- ✅ رفع وإدارة الملفات التعليمية
-- ✅ نظام فئات للمحتوى
-- ✅ سلة المشتريات
-- ✅ البحث في المحتوى
-- ✅ نظام توثيق JWT
-- ✅ Rate Limiting
-- ✅ Logging System
+✅ Role management (User/Admin)
 
-## 🛠️ التكنولوجيات المستخدمة
-- **Node.js** - Runtime Environment
-- **Express.js** - Web Framework
-- **MongoDB** - Database
-- **Mongoose** - ODM
-- **JWT** - Authentication
-- **bcrypt** - Password Hashing
-- **multer** - File Upload
-- **winston** - Logging
-- **helmet** - Security
-- **cors** - Cross-Origin Resource Sharing
+✅ Upload & manage educational files
 
-## 📦 التثبيت والتشغيل
+✅ Content categories system
 
-### المتطلبات
-- Node.js (v14 أو أحدث)
-- MongoDB
-- npm أو yarn
+✅ Shopping cart
 
-### خطوات التثبيت
-1. استنساخ المشروع:
-```bash
+✅ Content search
+
+✅ JWT authentication system
+
+✅ Rate limiting
+
+✅ Logging system
+
+🛠️ Technologies Used
+Node.js – Runtime Environment
+
+Express.js – Web Framework
+
+MongoDB – Database
+
+Mongoose – ODM
+
+JWT – Authentication
+
+bcrypt – Password Hashing
+
+multer – File Upload
+
+winston – Logging
+
+helmet – Security
+
+cors – Cross-Origin Resource Sharing
+
+📦 Installation & Setup
+Requirements
+Node.js (v14 or higher)
+
+MongoDB
+
+npm or yarn
+
+Installation Steps
+Clone the repository:
+
+bash
+Copy
+Edit
 git clone <repository-url>
 cd eduback
-```
+Install dependencies:
 
-2. تثبيت التبعيات:
-```bash
+bash
+Copy
+Edit
 npm install
-```
+Set up environment variables:
 
-3. إعداد المتغيرات البيئية:
-```bash
-# نسخ ملف التكوين
+bash
+Copy
+Edit
+# Copy the configuration file
 cp config.env.example config.env
-# تعديل المتغيرات حسب الحاجة
-```
+# Edit the variables as needed
+Start the database:
 
-4. تشغيل قاعدة البيانات:
-```bash
-# تأكد من تشغيل MongoDB
+bash
+Copy
+Edit
+# Make sure MongoDB is running
 mongod
-```
+Run the server:
 
-5. تشغيل الخادم:
-```bash
-# للتطوير
+bash
+Copy
+Edit
+# Development mode
 npm run dev
 
-# للإنتاج
+# Production mode
 npm start
-```
-
-## 🔧 التكوين
-
-### المتغيرات البيئية
-```env
+🔧 Configuration
+Environment Variables
+env
+Copy
+Edit
 # Server Configuration
 PORT=3009
 NODE_ENV=development
@@ -92,85 +115,118 @@ UPLOAD_PATH=uploads
 # Rate Limiting
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
-```
+📚 API Endpoints
+Authentication
+POST /api/auth – Login
 
-## 📚 API Endpoints
+POST /api/auth/logout – Logout
 
-### Authentication
-- `POST /api/auth` - تسجيل الدخول
-- `POST /api/auth/logout` - تسجيل الخروج
-- `GET /api/auth/verify` - التحقق من صحة التوكن
+GET /api/auth/verify – Verify token
 
-### Users
-- `POST /api/user` - تسجيل مستخدم جديد
-- `GET /api/user/me` - بيانات المستخدم الحالي
-- `GET /api/user/all` - جميع المستخدمين (للمدير)
+Users
+POST /api/user – Register a new user
 
-### Files/Courses
-- `POST /api/upload/upload` - رفع ملفات (للمدير)
-- `GET /api/upload/files` - جميع الملفات
-- `GET /api/upload/my-files` - ملفات المستخدم
-- `GET /api/upload/category/:category` - ملفات حسب الفئة
-- `GET /api/upload/files/stream/:id` - استريم ملف
-- `DELETE /api/upload/files/:id` - حذف ملف (للمدير)
+GET /api/user/me – Get current user data
 
-### Categories
-- `GET /api/category` - جميع الفئات
-- `POST /api/category` - إنشاء فئة جديدة
-- `GET /api/category/:category` - فئة محددة
-- `PUT /api/category/:id` - تحديث فئة
-- `DELETE /api/category/:id` - حذف فئة
+GET /api/user/all – Get all users (Admin only)
 
-### Cart
-- `POST /api/cart/cart` - إضافة إلى السلة
-- `GET /api/cart/cart` - محتويات السلة
-- `DELETE /api/cart/cart/:id` - حذف من السلة
+Files/Courses
+POST /api/upload/upload – Upload files (Admin only)
 
-### Search
-- `GET /api/search?query=searchTerm` - البحث في المحتوى
+GET /api/upload/files – Get all files
 
-## 🔒 الأمان
-- JWT Authentication
-- Password Hashing باستخدام bcrypt
-- Rate Limiting
-- CORS Protection
-- Helmet Security Headers
-- Input Validation باستخدام Joi
+GET /api/upload/my-files – Get user’s files
 
-## 📝 Logging
-يتم تسجيل الأخطاء والمعلومات في:
-- `logs/error.log` - الأخطاء فقط
-- `logs/combined.log` - جميع السجلات
+GET /api/upload/category/:category – Get files by category
 
-## 🐛 استكشاف الأخطاء
+GET /api/upload/files/stream/:id – Stream a file
 
-### مشاكل شائعة
-1. **خطأ في الاتصال بقاعدة البيانات**
-   - تأكد من تشغيل MongoDB
-   - تحقق من صحة MONGODB_URI
+DELETE /api/upload/files/:id – Delete a file (Admin only)
 
-2. **خطأ في التوثيق**
-   - تحقق من صحة JWT_SECRET
-   - تأكد من إرسال التوكن في header `y-auth-token`
+Categories
+GET /api/category – Get all categories
 
-3. **خطأ في رفع الملفات**
-   - تأكد من وجود مجلد `uploads`
-   - تحقق من حجم الملف (الحد الأقصى 1GB)
+POST /api/category – Create a new category
 
-## 📈 التحسينات المستقبلية
-- [ ] إضافة Redis للتخزين المؤقت
-- [ ] إضافة WebSocket للرسائل المباشرة
-- [ ] إضافة نظام إشعارات
-- [ ] إضافة API documentation باستخدام Swagger
-- [ ] إضافة اختبارات وحدة
-- [ ] إضافة Docker support
+GET /api/category/:category – Get specific category
 
-## 🤝 المساهمة
-1. Fork المشروع
-2. إنشاء branch جديد
-3. إجراء التغييرات
-4. إضافة اختبارات
-5. إنشاء Pull Request
+PUT /api/category/:id – Update category
 
-## 📄 الترخيص
-ISC License 
+DELETE /api/category/:id – Delete category
+
+Cart
+POST /api/cart/cart – Add to cart
+
+GET /api/cart/cart – Get cart contents
+
+DELETE /api/cart/cart/:id – Remove from cart
+
+Search
+GET /api/search?query=searchTerm – Search content
+
+🔒 Security
+JWT Authentication
+
+Password hashing with bcrypt
+
+Rate limiting
+
+CORS protection
+
+Helmet security headers
+
+Input validation with Joi
+
+📝 Logging
+Logs are stored in:
+
+logs/error.log – Errors only
+
+logs/combined.log – All logs
+
+🐛 Troubleshooting
+Common Issues
+Database connection error
+
+Make sure MongoDB is running
+
+Check the MONGODB_URI value
+
+Authentication error
+
+Verify JWT_SECRET is correct
+
+Ensure token is sent in the y-auth-token header
+
+File upload error
+
+Ensure the uploads folder exists
+
+Check file size (Max 1GB)
+
+📈 Future Improvements
+ Add Redis for caching
+
+ Add WebSocket for real-time messaging
+
+ Add notifications system
+
+ Add API documentation with Swagger
+
+ Add unit tests
+
+ Add Docker support
+
+🤝 Contribution
+Fork the repository
+
+Create a new branch
+
+Make your changes
+
+Add tests
+
+Create a pull request
+
+📄 License
+ISC License
